@@ -3,12 +3,17 @@ package com.example.demomvc.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.example.demomvc.entity.Tarefa;
 import com.example.demomvc.service.TarefaService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/tarefas")
@@ -23,17 +28,24 @@ public class TarefaController {
 	}
 	
 	@PostMapping("/salvar")
-	public String salvar(Tarefa tarefa) {
+	public String salvar(@Valid Tarefa tarefa, BindingResult result, RedirectAttributes attr) {
+		if (result.hasErrors()) {
+			return "/tarefa/cadastro";
+		}
 		service.salvar(tarefa);
-		
+		attr.addAttribute("success", "Tarefa salva com sucesso");
 		return "redirect:/tarefas/lista";
 	}
 	
 	@PostMapping("/editar")
-	public String editar(Tarefa tarefa) {
+	public String editar(@Valid Tarefa tarefa, BindingResult result, RedirectAttributes attr) {
+		if (result.hasErrors()) {
+			return "/tarefa/cadastro";
+		}
 
 		service.editar(tarefa);
-		return "redirect:/tarefas/cadastro";
+		attr.addAttribute("success", "Tarefa salva com sucesso");
+		return "redirect:/tarefas/lista";
 		
 		
 	}
@@ -41,6 +53,7 @@ public class TarefaController {
 	@GetMapping("/excluir/{id}")
 	public String excluir(@PathVariable("id") Long id, ModelMap model ) {
 		service.excluir(id);
+		model.addAttribute("success", "Tarefa excluída");
 		return lista(model);
 		
 	}

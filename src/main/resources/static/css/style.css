@@ -50,7 +50,7 @@ table th {
   background-color: #99cc33;
 }
 
-table > tbody > tr > td > a, table > tbody > tr > td > a:hover {
+table > tbody > tr > td > a, table > tbody > tr > td > a {
   text-decoration: none;
   font-weight: bold;
   background-color: #352726;
